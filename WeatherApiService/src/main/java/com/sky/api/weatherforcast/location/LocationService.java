@@ -1,5 +1,7 @@
 package com.sky.api.weatherforcast.location;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.sky.api.weatherforcast.common.Location;
@@ -18,4 +20,39 @@ public class LocationService {
 		return repository.save(location);
 	}
 	
+	public List<Location> list() {
+		return repository.findUntrashed();
+	}
+	
+	public Location get(String code) {
+		return repository.findByCode(code);
+	}
+	
+	public Location update(Location locationInRequest) throws LocationNotFoundException {
+		String code = locationInRequest.getCode();
+		
+		Location locationInDB = repository.findByCode(code);
+		
+		if (locationInDB == null) {
+			throw new LocationNotFoundException("No location found with the given code: " + code);
+		}
+		
+		locationInDB.setCityName(locationInRequest.getCityName());
+		locationInDB.setRegionName(locationInRequest.getRegionName());
+		locationInDB.setCountryCode(locationInRequest.getCountryCode());
+		locationInDB.setCountryName(locationInRequest.getCountryName());
+		locationInDB.setEnabled(locationInRequest.isEnabled());
+		
+		return repository.save(locationInDB);
+	}
+	
+	public void delete(String code) throws LocationNotFoundException {
+		Location locationInDB = repository.findByCode(code);
+		
+		if (locationInDB == null) {
+			throw new LocationNotFoundException("No location found with the given code: " + code);
+		}
+		
+		repository.trashByCode(code);
+	}
 }

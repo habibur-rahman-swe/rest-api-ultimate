@@ -120,4 +120,11 @@ public class Location {
 				&& enabled == other.enabled && Objects.equals(regionName, other.regionName) && trashed == other.trashed;
 	}
 
+	@Override
+	public String toString() {
+		return "Location [code=" + code + ", cityName=" + cityName + ", regionName=" + regionName + ", countryName="
+				+ countryName + ", countryCode=" + countryCode + ", enabled=" + enabled + ", trashed=" + trashed + "]";
+	}
+
+	
 }
